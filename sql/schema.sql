@@ -1,14 +1,30 @@
-CREATE TABLE `Candidates` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(100) NOT NULL,
-  `last_name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `application_date` date NOT NULL,
-  `country` int(100) NOT NULL,
-  `yoe` int(11) NOT NULL,
-  `seniority` varchar(100) NOT NULL,
-  `technology` varchar(100) NOT NULL,
-  `code_challenge_score` int(11) NOT NULL,
-  `technical_interview_score` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `staging_candidates` (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    email VARCHAR(255),
+    application_date DATE,
+    country VARCHAR(255),
+    yoe INT,
+    seniority VARCHAR(255),
+    technology VARCHAR(255),
+    code_challenge_score INT,
+    technical_interview_score INT,
+    Primary Key (id)
+);
+
+
+CREATE TABLE IF NOT EXISTS `candidates` (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    email VARCHAR(255),
+    application_date DATE,
+    country VARCHAR(255),
+    yoe INT,
+    seniority VARCHAR(255),
+    technology VARCHAR(255),
+    code_challenge_score INT,
+    technical_interview_score INT,
+    Primary Key (id)
+);

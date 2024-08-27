@@ -1,1 +1,0 @@
-SELECT * FROM  Candidates WHERE id = %s;

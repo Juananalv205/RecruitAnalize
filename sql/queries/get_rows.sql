@@ -1,1 +1,1 @@
-SELECT * FROM  Candidates
+SELECT * FROM  {{table_name}};

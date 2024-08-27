@@ -1,4 +1,4 @@
-INSERT INTO Candidates (
+INSERT INTO {{table_name}} (
     first_name, 
     last_name, 
     email, 

@@ -1,7 +1,9 @@
+#Importing library
 from .database import MysqlConnection
 import pandas as pd
 import os
 
+#Class to load data
 class LoadData:
     
     def __init__(self):
@@ -9,55 +11,55 @@ class LoadData:
 
     def insert_data_from_dataframe(self, insert_sql_file_path, select_sql_file_path, table_name, dataframe):
         try:
-            # Leer el archivo SQL de inserción
+            # Read the insert SQL file
             with open(insert_sql_file_path, 'r') as file:
                 insert_sql_script = file.read()
             insert_sql_script = insert_sql_script.replace('{{table_name}}', table_name)
 
-            # Leer el archivo SQL de selección
+            # Read the selection SQL file
             with open(select_sql_file_path, 'r') as file:
                 select_sql_script = file.read()
             select_sql_script = select_sql_script.replace('{{table_name}}', table_name)
 
-            # Conectar a la base de datos
+            # Connect to the database
             self.connection.open_connection()
 
             def insert_and_verify(start, end, expected_count):
-                """Función auxiliar para insertar un bloque de datos y verificar la inserción"""
+                #Auxiliary function for inserting a data block and verifying insertion
                 for index, row in dataframe.iloc[start:end].iterrows():
                     data_tuple = tuple(row)
                     try:
                         self.connection.run_query(insert_sql_script, data_tuple)
                     except Exception as e:
-                        print(f"Error durante la inserción de las filas {start} a {end}: {e}")
+                        print(f"Error during row insertion {start} a {end}: {e}")
                         return False
                 
-                # Verificación automática
+                # Automatic verification
                 try:
                     result = self.connection.run_select_query(select_sql_script)
                     if len(result) >= expected_count:
-                        print(f"Verificación exitosa: {expected_count} filas encontradas.")
+                        print(f"Successful verification: {expected_count} rows found.")
                         return True
                     else:
-                        print(f"Verificación fallida. Se esperaban {expected_count} filas, pero se encontraron {len(result)}.")
+                        print(f"Failed verification. The following were expected {expected_count} but they found themselves in {len(result)}.")
                         return False
                 except Exception as e:
-                    print(f"Error durante la verificación de las filas {start} a {end}: {e}")
+                    print(f"Error during row verification {start} a {end}: {e}")
                     return False
 
-            # **Fase de Prueba:** Subir y verificar las primeras 10 filas
+            # Test Phase: Upload and verify first 10 rows
             if not insert_and_verify(0, 10, 10):
-                return "Verificación fallida en las primeras 10 filas. Proceso abortado."
+                return "Failed verification in the first 10 rows. Process aborted."
 
-            # **Fase Final:** Subir y verificar los datos en bloques de 1000
+            # Final Phase: Upload and verify data in blocks of 1000
             total_rows = len(dataframe)
             for start in range(10, total_rows, 1000):
                 end = min(start + 1000, total_rows)
-                expected_count = end  # La cantidad esperada es el índice final
+                expected_count = end  # The expected amount is the final rate
                 if not insert_and_verify(start, end, expected_count):
-                    return f"Verificación fallida en el bloque de filas {start} a {end}. Proceso abortado."
-            return "Todos los datos insertados con éxito"
+                    return f"Failed verification in row block {start} a {end}. Process aborted."
+            return "All data successfully inserted"
         except FileNotFoundError:
-            return f"El archivo {insert_sql_file_path} o {select_sql_file_path} no se encontró."
+            return f"The file {insert_sql_file_path} or {select_sql_file_path} was not found."
         finally:
             self.connection.close_connection()

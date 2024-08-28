@@ -1,7 +1,9 @@
 #Importing library
+import sys
+import os
 from .database import MysqlConnection
 import pandas as pd
-import os
+
 
 #Class to load data
 class LoadData:

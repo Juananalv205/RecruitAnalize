@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `candidates` (
     email VARCHAR(255),
     application_date DATE,
     country VARCHAR(255),
-    yoe INT,
+    years_of_experiences INT,
     seniority VARCHAR(255),
     technology VARCHAR(255),
     code_challenge_score INT,
